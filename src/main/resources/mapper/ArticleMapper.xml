@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ny.mapper.ArticleMapper">
+    <resultMap id="articleMap"
+        type="com.ny.entity.ArticleEntity">
+        <result column="ID" property="id" />
+        <result column="TITLE" property="title" />
+        <result column="AUTHOR" property="author" />
+        <result column="POSTTIME" property="posttime" />
+        <result column="LIKENUM_WEEK" property="likenumWeek" />
+        <result column="READNUM_WEEK" property="readnumWeek" />
+        <result column="CONTENT" property="content" />
+        <result column="CONTENT_TEXT" property="contentText" />
+        <result column="NICKNAME" property="nickname" />
+    </resultMap>
+    <resultMap id="articleTypeCountMap"
+        type="com.ny.entity.ArticleTypeCountEntity">
+        <result column="ID" property="id" />
+        <result column="TYPE_NAME" property="typeName" />
+        <result column="TYPE_DATA" property="typeData" />
+        <result column="TYPE_TIME" property="typeTime" />
+        <result column="CURRENT_STATUS" property="currentStatus" />
+    </resultMap>
+    <resultMap id="countSchemaMap"
+        type="com.ny.entity.CountSchemaEntity">
+        <result column="ID" property="id" />
+        <result column="TYPE_NAME" property="typeName" />
+        <result column="TYPE_DATA" property="typeData" />
+        <result column="TYPE_TIME" property="typeTime" />
+        <result column="CURRENT_STATUS" property="currentStatus" />
+    </resultMap>
+    <resultMap id="countTableIncrMap"
+        type="com.ny.entity.CountTableIncrEntity">
+        <result column="ID" property="id" />
+        <result column="TYPE_NAME" property="typeName" />
+        <result column="TYPE_DATA" property="typeData" />
+        <result column="TYPE_TIME" property="typeTime" />
+        <result column="CURRENT_STATUS" property="currentStatus" />
+    </resultMap>
+    <resultMap id="countTotalDataMap"
+        type="com.ny.entity.CountTotalDataEntity">
+        <result column="ID" property="id" />
+        <result column="TYPE_NAME" property="typeName" />
+        <result column="TYPE_DATA" property="typeData" />
+        <result column="TYPE_TIME" property="typeTime" />
+        <result column="CURRENT_STATUS" property="currentStatus" />
+    </resultMap>
+    <resultMap id="countClassMap"
+        type="com.ny.entity.CountClassEntity">
+        <result column="ID" property="id" />
+        <result column="TYPE_NAME" property="typeName" />
+        <result column="NEWS_DATA" property="newsData" />
+        <result column="IMAGE_DATA" property="imageData" />
+        <result column="AUDIO_DATA" property="audioData" />
+        <result column="TYPE_TIME" property="typeTime" />
+        <result column="CURRENT_STATUS" property="currentStatus" />
+    </resultMap>
+    <resultMap id="articleInfoCountMap" type="com.ny.model.chart.ArticleInfoChartDTO">
+        <result property="date" column="type_time"></result>
+        <result property="type" column="type_name"></result>
+        <result property="count" column="type_data"></result>
+    </resultMap>
+    <resultMap id="articleCountMap" type="com.ny.model.count.ArticleCountDTO">
+        <result property="history" column="history"></result>
+        <result property="increase" column="increase"></result>
+    </resultMap>
+    <resultMap id="hotArticleMap" type="com.ny.model.HotArticleDTO">
+        <result property="id" column="ID"></result>
+        <result property="title" column="TITLE"></result>
+        <result property="url" column="URL"></result>
+        <result property="postTime" column="POSTTIME"></result>
+        <result property="author" column="AUTHOR"></result>
+        <result property="picUrl" column="PICURL"></result>
+    </resultMap>
+    <select id="getArticleList" resultMap="articleMap">
+        SELECT
+        a.ID,
+        TITLE,
+        NVL(a.AUTHOR,'') AUTHOR,
+        a.POSTTIME,
+        NVL(a.LIKENUM_WEEK,0)
+        LIKENUM_WEEK,
+        NVL(a.READNUM_WEEK,0) READNUM_WEEK,
+        CONTENT,
+        NICKNAME
+        FROM
+        CIBST.ARTICLE a
+        <where>
+            <if test="id != null ">a.id=#{id}</if>
+            <if test="title != null and title != '' "> <![CDATA[ AND a.title LIKE CONCAT(CONCAT('%',#{title}),'%')]]></if>
+            <if test="type != null and type != '' "><![CDATA[ AND a.tag LIKE CONCAT(CONCAT('%',#{type}),'%')]]></if>
+        </where>
+        <choose>
+            <when test="flag != null and flag != ''">
+                ORDER BY ${flag}
+            </when>
+            <otherwise>
+                ORDER BY a.POSTTIME DESC
+            </otherwise>
+        </choose>
+    </select>
+    <select id="getArticle" resultMap="articleMap">
+        SELECT
+        a.ID,
+        TITLE,
+        NVL(a.AUTHOR,'') AUTHOR,
+        a.POSTTIME,
+        NVL(a.LIKENUM_WEEK,0)
+        LIKENUM_WEEK,
+        NVL(a.READNUM_WEEK,0) READNUM_WEEK,
+        CONTENT,
+        CONTENT_TEXT,
+        NICKNAME
+        FROM
+        CIBST.ARTICLE a
+        <where>
+            <if test="id != null ">a.id=#{id}</if>
+        </where>
+    </select>
+    <select id="getArticleTypeCount"
+        resultMap="articleTypeCountMap">
+        SELECT
+        a.ID,
+        a.TYPE_NAME,
+        a.TYPE_DATA,
+        a.TYPE_TIME,
+        a.CURRENT_STATUS
+        FROM
+        CIBST.T_ARTICLE_TYPE_COUNT a
+        WHERE 1=1
+    </select>
+    <select id="getCountClass" resultMap="countClassMap">
+        SELECT
+        a.ID,
+        a.TYPE_NAME,
+        a.NEWS_DATA,
+        a.IMAGE_DATA,
+        a.AUDIO_DATA,
+        a.TYPE_TIME,
+        a.CURRENT_STATUS
+        FROM CIBST.T_COUNT_CLASS a
+        WHERE 1=1
+    </select>
+    <select id="getCountSchema" resultMap="countSchemaMap">
+        SELECT
+        a.ID,
+        a.TYPE_NAME,
+        a.TYPE_DATA,
+        a.TYPE_TIME,
+        a.CURRENT_STATUS
+        FROM
+        CIBST.T_COUNT_SCHEMA a
+        WHERE 1=1
+    </select>
+    <select id="getCountTableIncr" resultMap="countTableIncrMap">
+        SELECT
+        a.ID,
+        a.TYPE_NAME,
+        a.TYPE_DATA,
+        a.TYPE_TIME,
+        a.CURRENT_STATUS
+        FROM
+        CIBST.T_COUNT_TABLE_INCR a
+        WHERE 1=1
+    </select>
+    <select id="getCountTotalData" resultMap="countTotalDataMap">
+        SELECT
+        a.ID,
+        a.TYPE_NAME,
+        a.TYPE_DATA,
+        a.TYPE_TIME,
+        a.CURRENT_STATUS
+        FROM
+        CIBST.T_COUNT_TOTAL_DATA a
+        WHERE 1=1
+    </select>
+    <select id="getArticleInfoCount" resultMap="articleInfoCountMap">
+        SELECT
+            to_char(t.type_time,'yyyy-MM-dd') type_time,t.type_name,t.type_data
+        FROM
+            CIBST.T_ARTIC_COUNT t
+        WHERE
+        t.TYPE_TIME > trunc( SYSDATE, 'd' ) - 34
+    </select>
+    <select id="getArticleCount" resultMap="articleCountMap">
+        SELECT
+            *
+        FROM
+            (
+            SELECT
+                TYPE_HIS_SUM history
+            FROM
+                CIBST.T_ARTIC_HIS_SUM t
+            WHERE
+            t.TYPE_TIME = ( SELECT max( TYPE_TIME ) FROM CIBST.T_ARTIC_HIS_SUM )) a
+            JOIN (
+            SELECT
+                t.TYPE_CR_SUM increase
+            FROM
+                CIBST.T_ARTIC_CR_SUM t
+        WHERE
+            t.TYPE_TIME = ( SELECT max( TYPE_TIME ) FROM CIBST.T_ARTIC_CR_SUM )) b ON 1 =1
+    </select>
+    <select id="getHotArticle" resultMap="hotArticleMap">
+        SELECT
+            t.id,
+            t.TITLE,
+            t.POSTTIME,
+            t.URL,
+            t.AUTHOR,
+            t.PICURL
+        FROM
+            CIBST.ARTICLE t
+        ORDER BY
+            t.POSTTIME DESC
+    </select>
+</mapper>

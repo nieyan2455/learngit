@@ -1,0 +1,16 @@
+{"groups": [
+  {
+    "name": "druid"
+  }
+],"properties": [
+  {
+    "name": "druid.loginUsername",
+    "type": "java.lang.String",
+    "description":  "druid监控用户名"
+  },
+  {
+    "name": "druid.loginPassword",
+    "type": "java.lang.String",
+    "description": "druid监控密码"
+  }
+]}

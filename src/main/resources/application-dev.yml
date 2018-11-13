@@ -1,0 +1,19 @@
+spring:
+  datasource:  # 数据库配置
+    druid:
+      ds1:
+        username: username
+        password: password
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/ds1?useUnicode=true&characterEncoding=utf8
+        initialSize: 5
+        minIdle: 5
+        maxActive: 20
+      ds2:
+        username: username
+        password: password
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/ds2?useUnicode=true&characterEncoding=utf8
+        initialSize: 5
+        minIdle: 5
+        maxActive: 20
